@@ -1,4 +1,4 @@
-package main
+package websocket
 
 type Hub struct {
 	// Registered clients.
@@ -14,7 +14,7 @@ type Hub struct {
 	unregister chan *Client
 }
 
-func newHub() *Hub {
+func NewHub() *Hub {
 	return &Hub{
 		broadcast:  make(chan []byte),
 		register:   make(chan *Client),
@@ -23,7 +23,7 @@ func newHub() *Hub {
 	}
 }
 
-func (h *Hub) run() {
+func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
@@ -46,7 +46,7 @@ func (h *Hub) run() {
 	}
 }
 
-func (h *Hub) stop() {
+func (h *Hub) Stop() {
 	for client := range h.clients {
 		close(client.send)
 		delete(h.clients, client)

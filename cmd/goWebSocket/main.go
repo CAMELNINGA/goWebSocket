@@ -1,6 +1,7 @@
 package main
 
 import (
+	"goWebSocket/pkg/websocket"
 	"log"
 	"net/http"
 )
@@ -13,10 +14,10 @@ var addr = flag.String("addr", ":8080", "http service address")
 
 func main() {
 	flag.Parse()
-	hub := newHub()
-	go hub.run()
+	hub := websocket.NewHub()
+	go hub.Run()
 	http.HandleFunc("/echo", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r)
+		websocket.ServeWs(hub, w, r)
 	})
 	err := http.ListenAndServe(*addr, nil)
 	if err != nil {
